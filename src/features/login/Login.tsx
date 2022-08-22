@@ -1,12 +1,14 @@
 import React from 'react'
 import {Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from '@material-ui/core'
 import {useFormik} from 'formik';
-import {useDispatch} from 'react-redux';
 import {loginTC} from './auth-reducer';
+import {useAppDispatch, useAppSelector} from '../../common/hooks/useDispatchAndSelector';
+import {Navigate} from 'react-router-dom';
 
 
 export const Login = () => {
-    const dispatch = useDispatch<any>()
+    const dispatch = useAppDispatch()
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -32,6 +34,11 @@ export const Login = () => {
             formik.resetForm()
         },
     })
+
+    if (isLoggedIn) {
+        return <Navigate to={'/'}/>
+    }
+
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
             <form onSubmit={formik.handleSubmit}>

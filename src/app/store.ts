@@ -1,10 +1,10 @@
-import {TaskActionsType, tasksReducer} from '../features/TodolistsList/tasks-reducer';
 import {TodolistActionsType, todolistsReducer} from '../features/TodolistsList/todolists-reducer';
-import {applyMiddleware, combineReducers, legacy_createStore, compose} from 'redux'
+import {combineReducers} from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import {appReducer, AppReducerActionsType} from './app-reducer'
-import {ThunkAction, ThunkDispatch} from '@reduxjs/toolkit';
+import {configureStore, ThunkAction, ThunkDispatch} from '@reduxjs/toolkit';
 import {AuthActionsType, authReducer} from '../features/login/auth-reducer';
+import {TaskActionsType, tasksReducer} from '../features/TodolistsList/tasks-reducer';
 
 
 // объединяя reducer-ы с помощью combineReducers,
@@ -15,9 +15,11 @@ const rootReducer = combineReducers({
     app: appReducer,
     auth: authReducer
 })
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // непосредственно создаём store
-export const store = legacy_createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware)))
+export const store = configureStore({
+    reducer: rootReducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleware),
+})
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
 

@@ -18,16 +18,15 @@ const rootReducer = combineReducers({
 // непосредственно создаём store
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleware),
 })
-// определить автоматически тип всего объекта состояния
-export type AppRootStateType = ReturnType<typeof rootReducer>
 
 
 export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AppActionsType>
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AppActionsType>
 //type
 type AppActionsType = TaskActionsType | AppReducerActionsType | TodolistActionsType | AuthActionsType
+export type AppRootStateType = ReturnType<typeof rootReducer>
+
 
 
 

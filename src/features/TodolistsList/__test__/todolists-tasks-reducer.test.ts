@@ -1,9 +1,13 @@
-import { slice as tasksSlice, TasksStateType } from './tasks-reducer';
-import { TodolistDomainType, slice } from './todolists-reducer';
-
-import { todolistsActions } from '.';
-
 import { TodolistType } from 'api/types/types';
+import { todolistsActions } from 'features/TodolistsList/index';
+import {
+  slice as tasksSlice,
+  TasksStateType,
+} from 'features/TodolistsList/reducer/tasks-reducer';
+import {
+  TodolistDomainType,
+  slice,
+} from 'features/TodolistsList/reducer/todolists-reducer';
 
 const todolistsReducer = slice.reducer;
 const tasksReducer = tasksSlice.reducer;

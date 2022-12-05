@@ -1,7 +1,10 @@
-import { slice, TasksStateType, asyncActions } from './tasks-reducer';
-import { asyncActions as todolistsAsyncActions } from './todolists-reducer';
-
-import { TaskPriorities, TaskStatuses } from 'api/types/types';
+import { TaskPriorities, TaskStatusesType } from 'api/types/types';
+import {
+  slice,
+  TasksStateType,
+  asyncActions,
+} from 'features/TodolistsList/reducer/tasks-reducer';
+import { asyncActions as todolistsAsyncActions } from 'features/TodolistsList/reducer/todolists-reducer';
 
 const { reducer: tasksReducer } = slice;
 const { addTodolistTC, fetchTodolistsTC, removeTodolistTC } = todolistsAsyncActions;
@@ -15,7 +18,7 @@ beforeEach(() => {
       {
         id: '1',
         title: 'CSS',
-        status: TaskStatuses.New,
+        status: TaskStatusesType.New,
         todoListId: 'todolistId1',
         description: '',
         startDate: '',
@@ -27,7 +30,7 @@ beforeEach(() => {
       {
         id: '2',
         title: 'JS',
-        status: TaskStatuses.Completed,
+        status: TaskStatusesType.Completed,
         todoListId: 'todolistId1',
         description: '',
         startDate: '',
@@ -39,7 +42,7 @@ beforeEach(() => {
       {
         id: '3',
         title: 'React',
-        status: TaskStatuses.New,
+        status: TaskStatusesType.New,
         todoListId: 'todolistId1',
         description: '',
         startDate: '',
@@ -53,7 +56,7 @@ beforeEach(() => {
       {
         id: '1',
         title: 'bread',
-        status: TaskStatuses.New,
+        status: TaskStatusesType.New,
         todoListId: 'todolistId2',
         description: '',
         startDate: '',
@@ -65,7 +68,7 @@ beforeEach(() => {
       {
         id: '2',
         title: 'milk',
-        status: TaskStatuses.Completed,
+        status: TaskStatusesType.Completed,
         todoListId: 'todolistId2',
         description: '',
         startDate: '',
@@ -77,7 +80,7 @@ beforeEach(() => {
       {
         id: '3',
         title: 'tea',
-        status: TaskStatuses.New,
+        status: TaskStatusesType.New,
         todoListId: 'todolistId2',
         description: '',
         startDate: '',
@@ -105,7 +108,7 @@ test('correct task should be added to correct array', () => {
   const task = {
     todoListId: 'todolistId2',
     title: 'juce',
-    status: TaskStatuses.New,
+    status: TaskStatusesType.New,
     addedDate: '',
     deadline: '',
     description: '',
@@ -125,20 +128,20 @@ test('correct task should be added to correct array', () => {
   expect(endState.todolistId2.length).toBe(4);
   expect(endState.todolistId2[0].id).toBeDefined();
   expect(endState.todolistId2[0].title).toBe('juce');
-  expect(endState.todolistId2[0].status).toBe(TaskStatuses.New);
+  expect(endState.todolistId2[0].status).toBe(TaskStatusesType.New);
 });
 test('status of specified task should be changed', () => {
   const updateModel = {
     taskId: '2',
-    model: { status: TaskStatuses.New },
+    model: { status: TaskStatusesType.New },
     todolistId: 'todolistId2',
   };
   const action = updateTask.fulfilled(updateModel, 'requestId', updateModel);
 
   const endState = tasksReducer(startState, action);
 
-  expect(endState.todolistId1[1].status).toBe(TaskStatuses.Completed);
-  expect(endState.todolistId2[1].status).toBe(TaskStatuses.New);
+  expect(endState.todolistId1[1].status).toBe(TaskStatusesType.Completed);
+  expect(endState.todolistId2[1].status).toBe(TaskStatusesType.New);
 });
 test('title of specified task should be changed', () => {
   const updateModel = {

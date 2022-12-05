@@ -1,21 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { AxiosError } from 'axios';
 
-import { todolistsAPI } from '../../api/todolists-api';
-import {
-  handleAsyncServerAppError,
-  handleAsyncServerNetworkError,
-} from '../../utils/error-utils';
-import { AppRootStateType, ThunkError } from '../../utils/types';
-import { appActions } from '../CommonActions/App';
-
-import { asyncActions as asyncTodolistsActions } from './todolists-reducer';
-
+import { todolistsAPI } from 'api/todolists-api';
 import {
   TaskPriorities,
-  TaskStatuses,
+  TaskStatusesType,
   TaskType,
   UpdateTaskModelType,
 } from 'api/types/types';
+import { appActions } from 'features/CommonActions/App';
+import { asyncActions as asyncTodolistsActions } from 'features/TodolistsList/reducer/todolists-reducer';
+import {
+  handleAsyncServerAppError,
+  handleAsyncServerNetworkError,
+} from 'utils/error-utils';
+import { AppRootStateType, ThunkError } from 'utils/types';
 
 const initialState: TasksStateType = {};
 
@@ -23,7 +22,7 @@ export const fetchTasks = createAsyncThunk<
   { tasks: TaskType[]; todolistId: string },
   string,
   ThunkError
->('tasks/fetchTasks', async (todolistId, thunkAPI) => {
+>('tasks/fetchTasks', async (todolistId, thunkAPI): Promise<any> => {
   thunkAPI.dispatch(appActions.setAppStatus({ status: 'loading' }));
   try {
     const res = await todolistsAPI.getTasks(todolistId);
@@ -33,15 +32,15 @@ export const fetchTasks = createAsyncThunk<
 
     return { tasks, todolistId };
   } catch (error) {
-    return handleAsyncServerNetworkError(error, thunkAPI);
+    return handleAsyncServerNetworkError(error as AxiosError, thunkAPI);
   }
 });
 export const removeTask = createAsyncThunk<
   { taskId: string; todolistId: string },
   { taskId: string; todolistId: string },
   ThunkError
->('tasks/removeTask', async (param, thunkAPI) => {
-  const res = await todolistsAPI.deleteTask(param.todolistId, param.taskId);
+>('tasks/removeTask', async param => {
+  await todolistsAPI.deleteTask(param.todolistId, param.taskId);
 
   return { taskId: param.taskId, todolistId: param.todolistId };
 });
@@ -49,7 +48,7 @@ export const addTask = createAsyncThunk<
   TaskType,
   { title: string; todolistId: string },
   ThunkError
->('tasks/addTask', async (param, thunkAPI) => {
+>('tasks/addTask', async (param, thunkAPI): Promise<any> => {
   thunkAPI.dispatch(appActions.setAppStatus({ status: 'loading' }));
   try {
     const res = await todolistsAPI.createTask(param.todolistId, param.title);
@@ -66,7 +65,7 @@ export const addTask = createAsyncThunk<
       fieldsErrors: res.data.fieldsErrors,
     });
   } catch (err) {
-    return handleAsyncServerNetworkError(err, thunkAPI, false);
+    return handleAsyncServerNetworkError(err as AxiosError, thunkAPI, false);
   }
 });
 export const updateTask = createAsyncThunk(
@@ -102,7 +101,7 @@ export const updateTask = createAsyncThunk(
 
       return handleAsyncServerAppError(res.data, thunkAPI);
     } catch (error) {
-      return handleAsyncServerNetworkError(error, thunkAPI);
+      return handleAsyncServerNetworkError(error as AxiosError, thunkAPI);
     }
   },
 );
@@ -160,7 +159,7 @@ export const slice = createSlice({
 export type UpdateDomainTaskModelType = {
   title?: string;
   description?: string;
-  status?: TaskStatuses;
+  status?: TaskStatusesType;
   priority?: TaskPriorities;
   startDate?: string;
   deadline?: string;

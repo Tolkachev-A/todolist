@@ -1,16 +1,18 @@
-import {useDispatch} from 'react-redux'
-import {AppDispatchType} from './types'
-import {ActionCreatorsMapObject, bindActionCreators} from 'redux'
-import {useMemo} from 'react'
+import { useMemo } from 'react';
 
-export const useAppDispatch = () => useDispatch<AppDispatchType>()
+import { useDispatch } from 'react-redux';
+import { ActionCreatorsMapObject, bindActionCreators } from 'redux';
 
-export function useActions<T extends ActionCreatorsMapObject<any>>(actions: T) {
-    const dispatch = useAppDispatch()
+import { AppDispatchType } from './types';
 
-    const boundActions = useMemo(() => {
-        return bindActionCreators(actions, dispatch)
-    }, [])
+export const useAppDispatch = (): any => useDispatch<AppDispatchType>();
 
-    return boundActions
+export function useActions<T extends ActionCreatorsMapObject<any>>(actions: T): any {
+  const dispatch = useAppDispatch();
+
+  const boundActions = useMemo(() => {
+    return bindActionCreators(actions, dispatch);
+  }, []);
+
+  return boundActions;
 }

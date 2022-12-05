@@ -1,18 +1,15 @@
-import * as appSelectors from './selectors'
-import {RequestStatusType as T1, slice} from './application-reducer'
-import {asyncActions} from './application-reducer'
+import { asyncActions, slice } from 'features/Application/reducer';
+import * as appSelectors from 'features/Application/selectors';
+import { InitialStateType as T1 } from 'features/Application/types';
 
-const appReducer = slice.reducer
-const actions = slice.actions
+const appReducer = slice.reducer;
+const { actions } = slice;
 
 const appActions = {
-    ...actions,
-    ...asyncActions
-}
-export type RequestStatusType = T1
+  ...actions,
+  ...asyncActions,
+};
 
-export {
-    appSelectors,
-    appReducer,
-    appActions
-}
+export type RequestStatusType = T1;
+
+export { appSelectors, appReducer, appActions };

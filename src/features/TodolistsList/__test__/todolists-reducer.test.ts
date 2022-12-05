@@ -1,18 +1,15 @@
 import { v1 } from 'uuid';
 
-import { RequestStatusType } from '../Application/application-reducer';
-
+import { TodolistType } from 'api/types/types';
+import { RequestStatusType } from 'features/Application/types';
+import { todolistsActions } from 'features/TodolistsList/index';
 import {
   changeTodolistEntityStatus,
   changeTodolistFilter,
   FilterValuesType,
   TodolistDomainType,
   slice,
-} from './todolists-reducer';
-
-import { todolistsActions } from '.';
-
-import { TodolistType } from 'api/types/types';
+} from 'features/TodolistsList/reducer/todolists-reducer';
 
 const todolistsReducer = slice.reducer;
 const { addTodolistTC, changeTodolistTitleTC, fetchTodolistsTC, removeTodolistTC } =
@@ -68,6 +65,7 @@ test('correct todolist should be added', () => {
     addTodolistTC.fulfilled({ todolist }, 'requestId', todolist.title),
   );
 
+  // eslint-disable-next-line no-magic-numbers
   expect(endState.length).toBe(3);
   expect(endState[0].title).toBe(todolist.title);
   expect(endState[0].filter).toBe('all');
@@ -101,6 +99,7 @@ test('todolists should be added', () => {
 
   const endState = todolistsReducer([], action);
 
+  // eslint-disable-next-line no-magic-numbers
   expect(endState.length).toBe(2);
 });
 test('correct entity status of todolist should be changed', () => {

@@ -1,15 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AxiosError } from 'axios';
 
-import { todolistsAPI } from '../../api/todolists-api';
+import { todolistsAPI } from 'api/todolists-api';
+import { TodolistType } from 'api/types/types';
+import { RequestStatusType } from 'features/Application/types';
+import { appActions } from 'features/CommonActions/App';
 import {
   handleAsyncServerAppError,
   handleAsyncServerNetworkError,
-} from '../../utils/error-utils';
-import { ThunkError } from '../../utils/types';
-import { RequestStatusType } from '../Application';
-import { appActions } from '../CommonActions/App';
-
-import { TodolistType } from 'api/types/types';
+} from 'utils/error-utils';
+import { ThunkError } from 'utils/types';
 
 const { setAppStatus } = appActions;
 
@@ -17,7 +17,7 @@ const fetchTodolistsTC = createAsyncThunk<
   { todolists: TodolistType[] },
   undefined,
   ThunkError
->('todolists/fetchTodolists', async (param, thunkAPI) => {
+>('todolists/fetchTodolists', async (param, thunkAPI): Promise<any> => {
   thunkAPI.dispatch(setAppStatus({ status: 'loading' }));
   try {
     const res = await todolistsAPI.getTodolists();
@@ -26,17 +26,16 @@ const fetchTodolistsTC = createAsyncThunk<
 
     return { todolists: res.data };
   } catch (error) {
-    return handleAsyncServerNetworkError(error, thunkAPI);
+    return handleAsyncServerNetworkError(error as AxiosError, thunkAPI);
   }
 });
 const removeTodolistTC = createAsyncThunk<{ id: string }, string, ThunkError>(
   'todolists/removeTodolist',
-  async (todolistId, { dispatch, rejectWithValue }) => {
-    // изменим глобальный статус приложения, чтобы вверху полоса побежала
+  async (todolistId, { dispatch }) => {
     dispatch(setAppStatus({ status: 'loading' }));
-    // изменим статус конкретного тудулиста, чтобы он мог задизеблить что надо
     dispatch(changeTodolistEntityStatus({ id: todolistId, status: 'loading' }));
-    const res = await todolistsAPI.deleteTodolist(todolistId);
+
+    await todolistsAPI.deleteTodolist(todolistId);
 
     // скажем глобально приложению, что асинхронная операция завершена
     dispatch(setAppStatus({ status: 'succeeded' }));
@@ -59,7 +58,7 @@ const addTodolistTC = createAsyncThunk<{ todolist: TodolistType }, string, Thunk
 
       return handleAsyncServerAppError(res.data, thunkAPI, false);
     } catch (error) {
-      return handleAsyncServerNetworkError(error, thunkAPI, false);
+      return handleAsyncServerNetworkError(error as AxiosError, thunkAPI, false);
     }
   },
 );
@@ -77,7 +76,7 @@ const changeTodolistTitleTC = createAsyncThunk(
 
       return handleAsyncServerAppError(res.data, thunkAPI);
     } catch (error) {
-      return handleAsyncServerNetworkError(error, thunkAPI, false);
+      return handleAsyncServerNetworkError(error as AxiosError, thunkAPI, false);
     }
   },
 );

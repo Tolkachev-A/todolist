@@ -1,20 +1,23 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { memo, ReactElement, useCallback, useEffect } from 'react';
 
 import { Button, IconButton, Paper, PropTypes } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 
+import { tasksActions, todolistsActions } from '../index';
+
+import { Task } from './Task';
+
+import { TaskStatusesType, TaskType } from 'api/types';
 import {
   AddItemForm,
   AddItemFormSubmitHelperType,
-} from '../../../components/AddItemForm/AddItemForm';
-import { EditableSpan } from '../../../components/EditableSpan/EditableSpan';
-import { useActions, useAppDispatch } from '../../../utils/redux-utils';
-import { tasksActions, todolistsActions } from '../index';
-import { FilterValuesType, TodolistDomainType } from '../todolists-reducer';
-
-import { Task } from './Task/Task';
-
-import { TaskStatuses, TaskType } from 'api/types/types';
+} from 'components/AddItemForm/AddItemForm';
+import { EditableSpan } from 'components/EditableSpan';
+import {
+  FilterValuesType,
+  TodolistDomainType,
+} from 'features/TodolistsList/reducer/todolists-reducer';
+import { useActions, useAppDispatch } from 'utils/redux-utils';
 
 type PropsType = {
   todolist: TodolistDomainType;
@@ -22,12 +25,16 @@ type PropsType = {
   demo?: boolean;
 };
 
-export const Todolist = React.memo(function ({ demo = false, ...props }: PropsType) {
+// eslint-disable-next-line func-names
+export const Todolist = memo(function ({
+  demo = false,
+  ...props
+}: PropsType): ReactElement {
+  const dispatch = useAppDispatch();
+
   const { fetchTasks } = useActions(tasksActions);
   const { changeTodolistFilter, removeTodolistTC, changeTodolistTitleTC } =
     useActions(todolistsActions);
-
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (demo) {
@@ -46,17 +53,21 @@ export const Todolist = React.memo(function ({ demo = false, ...props }: PropsTy
           const errorMessage = resultAction.payload?.errors[0];
 
           helper.setError(errorMessage);
-        } else {
-          helper.setError('Some error occured');
+
+          return;
         }
-      } else {
-        helper.setTitle('');
+
+        helper.setError('Some error occured');
+
+        return;
       }
+
+      helper.setTitle('');
     },
     [props.todolist.id],
   );
 
-  const removeTodolist = () => {
+  const removeTodolist = (): void => {
     removeTodolistTC(props.todolist.id);
   };
   const changeTodolistTitle = useCallback(
@@ -78,17 +89,17 @@ export const Todolist = React.memo(function ({ demo = false, ...props }: PropsTy
   let tasksForTodolist = props.tasks;
 
   if (props.todolist.filter === 'active') {
-    tasksForTodolist = props.tasks.filter(t => t.status === TaskStatuses.New);
+    tasksForTodolist = props.tasks.filter(t => t.status === TaskStatusesType.New);
   }
   if (props.todolist.filter === 'completed') {
-    tasksForTodolist = props.tasks.filter(t => t.status === TaskStatuses.Completed);
+    tasksForTodolist = props.tasks.filter(t => t.status === TaskStatusesType.Completed);
   }
 
   const renderFilterButton = (
     buttonFilter: FilterValuesType,
     color: PropTypes.Color,
     text: string,
-  ) => {
+  ): ReactElement => {
     return (
       <Button
         variant={props.todolist.filter === buttonFilter ? 'outlined' : 'text'}
@@ -99,13 +110,15 @@ export const Todolist = React.memo(function ({ demo = false, ...props }: PropsTy
       </Button>
     );
   };
+  // @ts-ignore
+  const disabledIconButton = props.todolist.entityStatus === 'loading';
 
   return (
     <Paper style={{ padding: '10px', position: 'relative' }}>
       <IconButton
         size="small"
         onClick={removeTodolist}
-        disabled={props.todolist.entityStatus === 'loading'}
+        disabled={disabledIconButton}
         style={{ position: 'absolute', right: '5px', top: '5px' }}
       >
         <Delete fontSize="small" />
@@ -113,10 +126,7 @@ export const Todolist = React.memo(function ({ demo = false, ...props }: PropsTy
       <h3>
         <EditableSpan value={props.todolist.title} onChange={changeTodolistTitle} />
       </h3>
-      <AddItemForm
-        addItem={addTaskCallback}
-        disabled={props.todolist.entityStatus === 'loading'}
-      />
+      <AddItemForm addItem={addTaskCallback} disabled={disabledIconButton} />
       <div>
         {tasksForTodolist.map(t => (
           <Task key={t.id} task={t} todolistId={props.todolist.id} />

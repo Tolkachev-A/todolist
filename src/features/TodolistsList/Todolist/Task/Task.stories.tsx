@@ -6,7 +6,7 @@ import { ReduxStoreProviderDecorator } from '../../../../stories/decorators/Redu
 
 import { Task } from './Task';
 
-import { TaskPriorities, TaskStatuses } from 'api/types/types';
+import { TaskPriorities, TaskStatusesType } from 'api/types/types';
 
 export default {
   title: 'Task Stories',
@@ -24,7 +24,7 @@ export const TaskBaseExample = (props: any) => {
       <Task
         task={{
           id: '1',
-          status: TaskStatuses.Completed,
+          status: TaskStatusesType.Completed,
           title: 'CSS',
           todoListId: 'todolistId1',
           description: '',
@@ -39,7 +39,7 @@ export const TaskBaseExample = (props: any) => {
       <Task
         task={{
           id: '2',
-          status: TaskStatuses.New,
+          status: TaskStatusesType.New,
           title: 'JS',
           todoListId: 'todolistId1',
           description: '',

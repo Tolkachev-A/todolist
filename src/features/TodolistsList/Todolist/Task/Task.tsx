@@ -3,11 +3,10 @@ import React, { ChangeEvent, useCallback } from 'react';
 import { Checkbox, IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 
-import { EditableSpan } from '../../../../components/EditableSpan/EditableSpan';
-import { useActions } from '../../../../utils/redux-utils';
-import { tasksActions, todolistsActions } from '../../index';
-
-import { TaskStatuses, TaskType } from 'api/types/types';
+import { TaskStatusesType, TaskType } from 'api/types/types';
+import { EditableSpan } from 'components/EditableSpan';
+import { tasksActions } from 'features/TodolistsList/index';
+import { useActions } from 'utils/redux-utils';
 
 type TaskPropsType = {
   task: TaskType;
@@ -27,7 +26,9 @@ export const Task = React.memo((props: TaskPropsType) => {
       updateTask({
         taskId: props.task.id,
         model: {
-          status: e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New,
+          status: e.currentTarget.checked
+            ? TaskStatusesType.Completed
+            : TaskStatusesType.New,
         },
         todolistId: props.todolistId,
       });
@@ -49,11 +50,11 @@ export const Task = React.memo((props: TaskPropsType) => {
   return (
     <div
       key={props.task.id}
-      className={props.task.status === TaskStatuses.Completed ? 'is-done' : ''}
+      className={props.task.status === TaskStatusesType.Completed ? 'is-done' : ''}
       style={{ position: 'relative' }}
     >
       <Checkbox
-        checked={props.task.status === TaskStatuses.Completed}
+        checked={props.task.status === TaskStatusesType.Completed}
         color="primary"
         onChange={onChangeHandler}
       />

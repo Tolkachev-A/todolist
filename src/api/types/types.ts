@@ -19,7 +19,7 @@ export type ResponseType<D = {}> = {
   data: D;
 };
 
-export enum TaskStatuses {
+export enum TaskStatusesType {
   New = 0,
   InProgress = 1,
   // eslint-disable-next-line no-magic-numbers
@@ -39,7 +39,7 @@ export enum TaskPriorities {
 export type TaskType = {
   description: string;
   title: string;
-  status: TaskStatuses;
+  status: TaskStatusesType;
   priority: TaskPriorities;
   startDate: string;
   deadline: string;
@@ -51,7 +51,7 @@ export type TaskType = {
 export type UpdateTaskModelType = {
   title: string;
   description: string;
-  status: TaskStatuses;
+  status: TaskStatusesType;
   priority: TaskPriorities;
   startDate: string;
   deadline: string;

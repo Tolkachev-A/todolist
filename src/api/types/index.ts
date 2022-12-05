@@ -6,7 +6,7 @@ export type {
   GetTasksResponse,
   LoginParamsType,
   FieldErrorType,
-  TaskPriorities,
-  TaskStatuses,
   Nullable,
 } from './types';
+
+export { TaskStatusesType, TaskPriorities } from './types';

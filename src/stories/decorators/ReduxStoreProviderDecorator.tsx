@@ -12,7 +12,7 @@ import { authReducer } from '../../features/Auth';
 import { tasksReducer, todolistsReducer } from '../../features/TodolistsList';
 import { AppRootStateType, RootReducerType } from '../../utils/types';
 
-import { TaskPriorities, TaskStatuses } from 'api/types/types';
+import { TaskPriorities, TaskStatusesType } from 'api/types/types';
 
 const rootReducer: RootReducerType = combineReducers({
   tasks: tasksReducer,
@@ -45,7 +45,7 @@ const initialGlobalState: AppRootStateType = {
       {
         id: v1(),
         title: 'HTML&CSS',
-        status: TaskStatuses.Completed,
+        status: TaskStatusesType.Completed,
         todoListId: 'todolistId1',
         description: '',
         startDate: '',
@@ -57,7 +57,7 @@ const initialGlobalState: AppRootStateType = {
       {
         id: v1(),
         title: 'JS',
-        status: TaskStatuses.Completed,
+        status: TaskStatusesType.Completed,
         todoListId: 'todolistId1',
         description: '',
         startDate: '',
@@ -71,7 +71,7 @@ const initialGlobalState: AppRootStateType = {
       {
         id: v1(),
         title: 'Milk',
-        status: TaskStatuses.Completed,
+        status: TaskStatusesType.Completed,
         todoListId: 'todolistId2',
         description: '',
         startDate: '',
@@ -83,7 +83,7 @@ const initialGlobalState: AppRootStateType = {
       {
         id: v1(),
         title: 'React Book',
-        status: TaskStatuses.Completed,
+        status: TaskStatusesType.Completed,
         todoListId: 'todolistId2',
         description: '',
         startDate: '',

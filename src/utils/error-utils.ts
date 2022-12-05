@@ -1,9 +1,7 @@
 import { AxiosError } from 'axios';
-import { Dispatch } from 'redux';
 
-import { appActions } from '../features/CommonActions/App';
-
-import { ResponseType } from 'api/types/types';
+import { ResponseType } from 'api/types';
+import { appActions } from 'features/CommonActions/App';
 
 // BaseThunkAPI<S, E, D extends Dispatch = Dispatch, RejectedValue = undefined>
 type ThunkAPIType = {
@@ -11,6 +9,7 @@ type ThunkAPIType = {
   rejectWithValue: Function;
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const handleAsyncServerAppError = <D>(
   data: ResponseType<D>,
   thunkAPI: ThunkAPIType,
@@ -35,7 +34,7 @@ export const handleAsyncServerNetworkError = (
   error: AxiosError,
   thunkAPI: ThunkAPIType,
   showError = true,
-) => {
+): void => {
   if (showError) {
     thunkAPI.dispatch(
       appActions.setAppError({

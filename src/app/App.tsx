@@ -6,12 +6,10 @@ import {
   Button,
   CircularProgress,
   Container,
-  IconButton,
   LinearProgress,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { Menu } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
 import { Route } from 'react-router-dom';
 
@@ -60,11 +58,11 @@ const App = ({ demo = false }: PropsType): ReactElement => {
     <div className="App">
       <ErrorSnackbar />
       <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <Menu />
-          </IconButton>
-          <Typography variant="h6">News</Typography>
+        <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {/* <IconButton edge="start" color="inherit" aria-label="menu"> */}
+          {/*  <Menu /> */}
+          {/* </IconButton> */}
+          <Typography variant="h6">Todolist</Typography>
           {isLoggedIn && (
             <Button color="inherit" onClick={onLogoutClick}>
               Log out
